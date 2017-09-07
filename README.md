@@ -6,7 +6,7 @@ How to Install
 ======
 
 1) Download and install DB11 (IP2Location™ LITE IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE Database) from [here](https://http://lite.ip2location.com/database/ip-country-region-city-latitude-longitude-zipcode-timezone), follow the instruction on the same page and you will have the DB imported into SQL server in a minute. 
-2) Then install `pip install requests argparse pyodbc sys json time datetime colorama fabric colors`
+2) Then install `pip install requests argparse pyodbc json time datetime colorama fabric colors`
 
 Alt-H2
 ------
