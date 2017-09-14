@@ -9,6 +9,17 @@ How to Install
 2) Then install `pip install requests argparse pyodbc json time datetime colorama fabric colors`
 3) Download the query `SQLQuery_Create_Fantai_Details_lTable.sql` and run it against your ip2location database: a table will be created and there Fantail will store your precious data  
 
-Alt-H2
+How to use it 
+------
+
+Because life is hard enought I did the best I could to develop someting that just works. 
+Well, the code is horrible but it get the job done....
+You don't have to write even 1 line of code; sit down and relax because I'm going to feed you with a spoon. 
+`python Fantail.py --help` will print all the options for you 
+`python Fantail.py --city "Auckland" --category "hospital"` will return all the hospitals in Auckland. Look [here for a complete list of categories](https://developers.google.com/places/supported_types) supported bu Google Places API.
+`python Fantail.py --country "NZ" --category "hospital"` will return all hospitals in New Zealand 
+`python Fantail.py --country "NZ" --category "hospital" --do "save"` will start saving the results in your SQL Server database. 
+
+Limitations
 ------
 
