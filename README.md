@@ -17,7 +17,7 @@ Well, the code is horrible but it get the job done....
 You don't have to write not even 1 line of code; sit down and relax because I'm going to feed you with a spoon. 
 * `python Fantail.py --help` will print all the options for you 
 * `python Fantail.py --city "Auckland" --category "hospital"` will return all the hospitals in Auckland. Look [here for a complete list of categories](https://developers.google.com/places/supported_types) supported bu Google Places API.
-* `python Fantail.py --country "NZ" --category "hospital"` will return all hospitals in New Zealand 
+* `python Fantail.py --country "NZ" --category "hospital"` will return all hospitals in New Zealand (so put "US" for United States, "FR" for France, etc...)
 * `python Fantail.py --country "NZ" --category "hospital" --do "save"` will start saving the results in your SQL Server database. 
 
 Limitations
