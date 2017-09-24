@@ -9,7 +9,7 @@ How to Install
 2) Then install `pip install requests argparse pyodbc json time datetime colorama fabric colors`
 3) Download the query `SQLQuery_Create_Fantai_Details_Table.sql` and run it against your IP2location database: a table will be created and there Fantail will store your precious data 
 4) Configure ODBC to connect to Microsoft SQL Server (help yourself [following this guide](https://www.youtube.com/watch?v=tUiaK5fRH7k&ab_channel=itgeared))
-5) Now open Fantail.py and insert your Google Places API into the variable `MyGooglePlacesAPIKey` and your ODBC credentials into the variable `Connection_Details`
+5) Now open `Fantail.py` and insert your Google Places API into the variable `MyGooglePlacesAPIKey` and your ODBC credentials into the variable `Connection_Details`
 
 How to use it 
 ------
