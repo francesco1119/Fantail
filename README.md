@@ -22,6 +22,13 @@ You don't have to write not even 1 line of code; so sit down and relax because I
 * `python Fantail.py --country "NZ" --category "hospital"` will return all hospitals in New Zealand (so put "US" for United States, "FR" for France, etc...)
 * `python Fantail.py --country "NZ" --category "hospital" --do "save"` will start saving the results in your SQL Server database. 
 
+How it works under the hood 
+------
+
+The world is quite big to scrap using random geographical coordinates. You need to avoid oceans, deserts, jungles, lakes, mountain chains and plces where simply there is nothing. Google provides you 25,000 query search per day but you will run out of query if you search where there is nothing. So I based the search on IP2Location™, a database that stores the coordinates of IP providers. 
+
+
+
 Limitations
 ------
 
