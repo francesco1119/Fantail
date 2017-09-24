@@ -41,6 +41,9 @@ While in **Switzerland** you will avoid so waste your precious queries into the 
 **Kazakhstan** has less but I'm quite sure there are no commerce listed on Google Places for remote areas without internet access 
 ![Kazakhstan_Fantail](https://github.com/francesco1119/Fantail/blob/master/images/Kazakhstan.PNG)
 
+You don't want to search for a restaurant in the middle of the **Brazilian** jungle, right?
+![Brazil_Fantail](https://github.com/francesco1119/Fantail/blob/master/images/Brazil.PNG)
+
 
 Future developent
 ------
