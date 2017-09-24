@@ -40,10 +40,6 @@ While in **Switzerland** you will avoid so waste your precious queries into the 
 ![Kazakhstan_Fantail](https://github.com/francesco1119/Fantail/blob/master/images/Kazakhstan.PNG)
 
 
-
-
-
-
-Limitations
+Future developent
 ------
-
+I will try to mantain this repository but if I don't have time, please fork this
