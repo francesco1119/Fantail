@@ -1,5 +1,5 @@
 ## Fantail
-#### Fantail will scrap Google Places API for you and will save the results in a SQL Server Database 
+#### Fantail is a native New Zealand bird. Fantail is also a Python script that will scrap Google Places API for you without crap and will save the results in a SQL Server Database 
 ![alt text](http://www.ngamanuimages.org.nz/images/lres/d03689.jpg)
 
 How to Install
@@ -26,7 +26,7 @@ You don't have to write not even 1 line of code; so sit down and relax because I
 How it works under the hood 
 ------
 
-The world is quite big to scrap using random geographical coordinates. You need to avoid oceans, deserts, jungles, lakes, mountain chains and plces where simply there is nothing. Google provides you 25,000 query search per day but you will run out of query if you search where there is nothing. So I based the search on IP2Location™, a database that stores the coordinates of IP providers. 
+The world is quite big to scrap using random geographical coordinates. You need to avoid oceans, deserts, jungles, lakes, mountain chains and plces where simply there is nothing. Google provides you 25,000 query search per day but you will run out of query if you search where there is nothing. So I based the search on IP2Location™, a database that stores the coordinates of IP adresses. 
 
 So in **Australia** you will search just on are where there are human beings, avoiding to search in the middle of the desert:
 ![Australia_Fantail](https://github.com/francesco1119/Fantail/blob/master/images/Australia.PNG)
