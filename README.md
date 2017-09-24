@@ -1,5 +1,6 @@
 ## Fantail
-#### Fantail is a native New Zealand bird. Fantail is also a Python script that will scrap Google Places API for you without crap and will save the results in a SQL Server Database 
+#### Fantail is a native New Zealand bird. 
+#### Fantail is also a Python script that will scrap Google Places API for you without crap and will save the results in a SQL Server Database 
 ![alt text](http://www.ngamanuimages.org.nz/images/lres/d03689.jpg)
 
 How to Install
