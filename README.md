@@ -18,11 +18,24 @@ How to use it
 Because life is hard enought I did the best I could to develop someting that just works. 
 Well, the code is horrible but it get the job done....
 You don't have to write not even 1 line of code; so sit down and relax because I'm going to feed you with a spoon. 
-* `python Fantail.py --help` will print all the options for you 
-* `python Fantail.py --city "Auckland" --category "hospital"` will return all the hospitals in Auckland. Look [here for a complete list of categories](https://developers.google.com/places/supported_types) supported bu Google Places API.
-* `python Fantail.py --city "Auckland" --category "hospital" --radius "1000"` will limit the radius research to 1000 around your target. By default the radius research is set to 25,000; you can push it till 50,000
-* `python Fantail.py --country "NZ" --category "hospital"` will return all hospitals in New Zealand (so put "US" for United States, "FR" for France, etc...)
-* `python Fantail.py --country "NZ" --category "hospital" --do "save"` will start saving the results in your SQL Server database. 
+
+>python Fantail.py --help
+usage: Fantail.py [-h] [--country] [--city] [--category] [--radius] [--do] [--rownumber]
+
+optional arguments:
+  -h, --help    show this help message and exit
+  --country     input a country code (like "US" or "FR" or "NZ")
+  --city        enter a city name (like "New York" or "Paris" or "Auckland")
+  --category    enter a business category
+  --radius      enter a radius between 0 and 50000 (default is 25000)
+  --do          arguments are "show" or "save"
+  --rownumber   input a specific row number
+
+Pretty easy to understand how to use it, right? So if you use the command `--do "show"` Fantail will show you what it find on the terminal, like this: 
+
+While if you use the option --do "save" it will just tell you what it has saved. Yes, as you can see it doesn't save double places in your database so your DB is clean and doesn't need extra care after a Fantail search:
+
+
 
 How it works under the hood 
 ------
