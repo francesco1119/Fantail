@@ -12,6 +12,20 @@ How to Install
 4) Configure ODBC to connect to Microsoft SQL Server (help yourself [following this guide](https://www.youtube.com/watch?v=tUiaK5fRH7k&ab_channel=itgeared))
 5) Now open `Fantail.py` and insert your Google Places API into the variable `MyGooglePlacesAPIKey` and your ODBC credentials into the variable `Connection_Details`
 
+```
+#####################################################################
+# Enter here your Google Places API key								#
+MyGooglePlacesAPIKey = 'AIzaSyDnfdcHa3n7iDzi_NqZ0sXslC1KmAiGZdQ'	#
+																	#
+# Enter here your database credentials 								#
+Connection_Details = ('DRIVER={SQL Server};'						#
+					  'SERVER=ASPIRES3;'							#
+					  'DATABASE=ip2location;'						#
+					  'UID=sqlninja;'								#
+					  'PWD=sqlninja')								#
+#####################################################################
+```
+
 How to use it 
 ------
 
