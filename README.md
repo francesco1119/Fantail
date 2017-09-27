@@ -33,9 +33,11 @@ optional arguments:
 
 Pretty easy to understand how to use it, right? So if you use the command `--do "show"` Fantail will show you what it find on the terminal, like this: 
 
+![Fantail_show](https://github.com/francesco1119/Fantail/blob/master/images/show%20colors.PNG)
+
 While if you use the option --do "save" it will just tell you what it has saved. Yes, as you can see it doesn't save double places in your database so your DB is clean and doesn't need extra care after a Fantail search:
 
-
+![Fantail_save](https://github.com/francesco1119/Fantail/blob/master/images/example%20multi%20color.PNG)
 
 How it works under the hood 
 ------
@@ -57,6 +59,10 @@ While in **Switzerland** you will avoid so waste your precious queries into the 
 You don't want to search for a restaurant in the middle of the **Brazilian** jungle, right?
 ![Brazil_Fantail](https://github.com/francesco1119/Fantail/blob/master/images/Brazil.PNG)
 
+Limitations
+------
+
+Fantail doesn't search 
 
 Future developent
 ------
