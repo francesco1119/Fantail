@@ -48,7 +48,7 @@ args = parser.parse_args()
 
 #####################################################################
 # Enter here your Google Places API key								#
-MyGooglePlacesAPIKey = 'AIzaSyDnfdcHa3n7iDzi_NqZ0sXslC1KmAiGZdQ'	#
+MyGooglePlacesAPIKey = 'PutYourKeyHere'	#
 																	#
 # Enter here your database credentials 								#
 Connection_Details = ('DRIVER={SQL Server};'						#
