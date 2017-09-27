@@ -17,19 +17,30 @@ How to use it
 
 Because life is hard enought I did the best I could to develop someting that just works. 
 Well, the code is horrible but it get the job done....
-You don't have to write not even 1 line of code; so sit down and relax because I'm going to feed you with a spoon. 
+You don't have to write not even 1 line of code; so sit down and relax because I'm going to feed you with a spoon.
+
 If you run:
+
 `>python Fantail.py --help`
+
 you will see:
+
 `usage: Fantail.py [-h] [--country] [--city] [--category] [--radius] [--do] [--rownumber]`
 
 `optional arguments:`
+
 `  -h, --help    show this help message and exit`
+
 `  --country     input a country code (like "US" or "FR" or "NZ")`
+
 `  --city        enter a city name (like "New York" or "Paris" or "Auckland")`
+
 `  --category    enter a business category`
+
 `  --radius      enter a radius between 0 and 50000 (default is 25000)`
+
 `  --do          arguments are "show" or "save"`
+
 `  --rownumber   input a specific row number`
 
 Pretty easy to understand how to use it, right? So if you use the command `--do "show"` Fantail will show you what it find on the terminal, like this: 
