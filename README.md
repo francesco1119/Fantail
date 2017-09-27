@@ -19,11 +19,7 @@ Because life is hard enought I did the best I could to develop someting that jus
 Well, the code is horrible but it get the job done....
 You don't have to write not even 1 line of code; so sit down and relax because I'm going to feed you with a spoon.
 
-If you run:
-
-`>python Fantail.py --help`
-
-you will see:
+Try you run `python Fantail.py --help` and you will see:
 ```
 usage: Fantail.py [-h] [--country] [--city] [--category] [--radius] [--do] [--rownumber]
 
@@ -60,17 +56,29 @@ While in **Switzerland** you will avoid so waste your precious queries into the 
 **France** is copletely covered as it has a lot of IP 
 ![France_Fantail](https://github.com/francesco1119/Fantail/blob/master/images/France.PNG)
 
-**Kazakhstan** has less but I'm quite sure there are no commerce listed on Google Places for remote areas without internet access 
+**Kazakhstan** has less but I'm quite sure there are no commerce listed on Google Places for remote areas without internet access (Please, kazakhs friends, don't take this personal, I've never been to Kazakhstan but from Google Maps I couldn't find many commerces for remote areas and I choose your country as an example. I know for sure there are cinemas, hospitals, restaruants, etc... I'm just saying that Google Map doesn't list them . If I'm telling bulshit just drop me a line and I will correct this phrase.)
 ![Kazakhstan_Fantail](https://github.com/francesco1119/Fantail/blob/master/images/Kazakhstan.PNG)
 
-You don't want to search for a restaurant in the middle of the **Brazilian** jungle, right?
+You don't want to search for a restaurant in the middle of the **Brazilian** jungle, right? (alright, now, if you find a restaurant in the middle of the Brazilian jungle and is listed on Google Maps, please drop me a line because I want to visit it)
 ![Brazil_Fantail](https://github.com/francesco1119/Fantail/blob/master/images/Brazil.PNG)
 
 Limitations
 ------
 
-Fantail doesn't search 
+Fantail doesn't search for geographic area like this:
+
+![Fantail_Not](https://github.com/francesco1119/Fantail/blob/master/images/whatnot.png)
+
+If you want to do so [go here](https://iliauk.com/2015/12/18/data-mining-google-places-cafe-nero-example/)
 
 Future developent
 ------
-I will try to mantain this repository but if I don't have time, please fork this
+On spare time my TODO list is:
+
+* rewrite code with well defined funtions :|
+* Fix the `'OVER_QUERY_LIMIT'` with retry
+* add `--country "ALL"` option
+* add `--country & --city` option
+* develop `next_page_token`
+
+**Please if you have requests drop me a line**
