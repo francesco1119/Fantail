@@ -15,7 +15,7 @@ How to Install
 ```
 #####################################################################
 # Enter here your Google Places API key				    #
-MyGooglePlacesAPIKey = 'AIzaSyDnfdcHa3n7iDzi_NqZ0sXslC1KmAiGZdQ'    #
+MyGooglePlacesAPIKey = 'AIzaSyDnfdcHa3nHello_WorldXslC1KmAiGZdQ'    #
 								    #
 # Enter here your database credentials 				    #
 Connection_Details = ('DRIVER={SQL Server};'			    #
