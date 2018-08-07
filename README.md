@@ -88,10 +88,6 @@ Future developent
 ------
 On spare time my TODO list is:
 
-* rewrite code with well defined funtions :|
-* Fix the `'OVER_QUERY_LIMIT'` with retry
-* add `--country "ALL"` option
-* add `--country & --city` option
-* develop `next_page_token`
+* rewrite code with official [`googlemaps`](https://github.com/googlemaps/google-maps-services-python) Python library
 
 **Please if you have requests drop me a line**
