@@ -333,17 +333,21 @@ def SQLQuery():
 						""" % (args.city)
 	if args.country and args.rownumber:
 		sqlStatement = 	"""
-						WITH cte AS
-						(   SELECT *, ROW_NUMBER() OVER (PARTITION BY latitude, longitude ORDER BY latitude, longitude) AS rn,
-							DENSE_RANK() OVER (ORDER BY city_name desc) as countdown_order
-							FROM ip2location_db11
+						SELECT *
+						FROM
+						(	SELECT 
+							ROW_NUMBER() OVER (ORDER BY country_code desc, 
+							city_name desc) as countdown_order,
+							AVG(latitude) AS latitude, 
+							AVG(longitude) AS longitude, 
+							city_name, 
+							country_code   
+							FROM  ip2location_db11 
 							where country_code = '%s'
-						)
-						SELECT countdown_order,latitude,longitude,city_name,country_code
-						FROM cte
-						WHERE rn = 1
-						and countdown_order <= '%s'
-						order by city_name 	
+							GROUP BY country_code, city_name
+						) as D
+						where countdown_order < %s
+						ORDER BY country_code, city_name 	
 						""" % (args.country,args.rownumber)
 	if args.country and args.city:
 		sqlStatement = 	"""
