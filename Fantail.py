@@ -60,7 +60,7 @@ class style:
 
 #####################################################################
 # Enter here your Google Places API key								#
-MyGooglePlacesAPIKey = 'AIzaSyD_A2-EpKfC4BtxJOu6XajR7JIjmYiU46w'	#
+MyGooglePlacesAPIKey = 'MyBeautifulAPIKey'	#
 																	#
 # Enter here your database credentials 								#
 Connection_Details = ('DRIVER={SQL Server};'						#
