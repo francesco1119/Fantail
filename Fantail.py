@@ -77,10 +77,11 @@ url2 = 'https://maps.googleapis.com/maps/api/place/details/json?'
 #url_next = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=%s&key=%s' % (next_page_token, api_key)
 next_page_token = ""
 	
-Total_Places_Found = 0
+
 # GET all Places for a certain Latitude and Longitude
 def GET_Places_for_Lat_Lon(url1):
 	global page_no
+	global Total_Places_Found
 	global response_data1
 	url = url1  				
 	params1 = {'location': '%s,%s' % (latitude,longitude),                                   
@@ -91,6 +92,7 @@ def GET_Places_for_Lat_Lon(url1):
 	response_data1 = response1.json()
 	#page_no += 1
 	page_no = 0
+	Total_Places_Found = 0
 # GET all details for a single Place_ID
 def GET_Single_Place_Details(url2):
 	
@@ -150,7 +152,7 @@ def Google_call_for_details():
 		GoogleWebsite = response_data2['result'].get("website", None)
 		time.sleep(args.speed)
   
-def get_place_for(countdown_order,latitude, longitude,city_name,country_code,url1):                                                      
+def get_place_for(countdown_order,latitude, longitude,city_name,region_name,country_code,url1):                                                      
 	
 	global SQL_Place_ID
 	global next_page_token
@@ -196,14 +198,15 @@ def get_place_for(countdown_order,latitude, longitude,city_name,country_code,url
 	# Here we go to store JSON elements for SQL
 	
 	if response_data1['status'] == 'ZERO_RESULTS':
-		print (fg.RED,style.BRIGHT + '{0}) Nothing found for: {1}, {2} at {3}'.format(countdown_order,city_name,country_code,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),style.RESET_ALL))
+		print (fg.RED,style.BRIGHT + '{0}) Nothing found for: {1}, {2} {3} at {4}'.format(countdown_order,city_name,region_name,country_code,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),style.RESET_ALL))
 		time.sleep(args.speed)
+		
 	
-	if response_data1['status'] == 'OVER_QUERY_LIMIT':
+	elif response_data1['status'] == 'OVER_QUERY_LIMIT':
 		while response_data1['status'] == 'OVER_QUERY_LIMIT':
-			print (fg.RED,style.BRIGHT +'{0}) OVER_QUERY_LIMIT for: {1}, {2} at {3}. I will try again in 1 hour.'.format(countdown_order,city_name,country_code,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),style.RESET_ALL))
+			print (fg.RED,style.BRIGHT +'{0}) OVER_QUERY_LIMIT for: {1}, {2} {3} at {4}. I will try again in 1 hour.'.format(countdown_order,city_name,region_name,country_code,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),style.RESET_ALL))
 			time.sleep(3600)
-			get_place_for(countdown_order,latitude, longitude,city_name,country_code,url1)
+			get_place_for(countdown_order,latitude, longitude,city_name,region_name,country_code,url1)
 	
 	elif response_data1['status'] == 'OK':
 		Total_Places_Found += len(response_data1['results'])
@@ -261,27 +264,34 @@ def get_place_for(countdown_order,latitude, longitude,city_name,country_code,url
 		if 'next_page_token' in response_data1:
 			#page_no += 1
 			next_page_token = response_data1['next_page_token']
-			print (fg.GREEN,style.BRIGHT +' On page number', page_no, 'found:', len(response_data1['results']),'places',style.RESET_ALL)
+			#print (fg.GREEN,style.BRIGHT +' On page number', page_no, 'found:', len(response_data1['results']),'places',style.RESET_ALL)
 			url1 = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=%s&key=%s' % (next_page_token, MyGooglePlacesAPIKey)
-			get_place_for(countdown_order,latitude, longitude,city_name,country_code,url1)
+			get_place_for(countdown_order,latitude, longitude,city_name,region_name,country_code,url1)
 			
 		else:
 			#page_no += 1
-			print (fg.GREEN,style.BRIGHT +' On page number', page_no, ',', 'found:', len(response_data1['results']),'places',style.RESET_ALL)
+			#print (fg.GREEN,style.BRIGHT +' On page number', page_no, ',', 'found:', len(response_data1['results']),'places',style.RESET_ALL)
+			pass
 	page_no += 1	
-	#Print_Total(countdown_order,latitude, longitude,city_name,country_code,Place_found,page_no,Total_Places_Found)
+	#Print_Total(countdown_order,latitude, longitude,city_name,region_name,country_code,Place_found,page_no,Total_Places_Found)
+	return Total_Places_Found
 	time.sleep(args.speed)
 	
-def Print_Total(countdown_order,latitude, longitude,city_name,country_code,Place_found,page_no,Total_Places_Found): 
+def Print_Total(countdown_order,latitude, longitude,city_name,region_name,country_code,Place_found,page_no,Total_Places_Found): 
 	if args.do == 'show':
-		print (fg.GREEN,style.BRIGHT + '{0}) Total Places found: {1} near: {2}, {3} at {4}'.format(countdown_order,Total_Places_Found,city_name,country_code,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),style.RESET_ALL))
+		if Total_Places_Found == 0:
+			pass
+		else:
+			print (fg.GREEN,style.BRIGHT + '{0}) Total Places found: {1} near: {2}, {3} {4} at {5}'.format(countdown_order,Total_Places_Found,city_name,region_name,country_code,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),style.RESET_ALL))
 
 	elif args.do == 'save':
-		if Place_found == 0:
-			print (fg.YELLOW,style.BRIGHT +'{0}) Places found {1}, but Places saved {2} (all already in database) near: {3}, {4} at {5}'.format(countdown_order,Total_Places_Found,Place_found,city_name,country_code,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),style.RESET_ALL))
+		if Total_Places_Found == 0:
+			pass
+		elif Place_found != Total_Places_Found:
+			print (fg.YELLOW,style.BRIGHT +'{0}) Places found {1}, but Places saved {2} (all already in database) near: {3}, {4} {5} at {6}'.format(countdown_order,Total_Places_Found,Place_found,city_name,region_name,country_code,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),style.RESET_ALL))
 			time.sleep(args.speed)
-		else:
-			print (fg.GREEN,style.BRIGHT +'{0}) Places found {1}, Places saved {2} near: {3}, {4} at {5}'.format(countdown_order,Total_Places_Found,Place_found,city_name,country_code,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),style.RESET_ALL))
+		elif Place_found == Total_Places_Found:
+			print (fg.GREEN,style.BRIGHT +'{0}) Places found {1}, Places saved {2} near: {3}, {4} {5} at {6}'.format(countdown_order,Total_Places_Found,Place_found,city_name,region_name,country_code,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),style.RESET_ALL))
 			time.sleep(args.speed)	
 			
 def SQLQuery():
@@ -299,11 +309,12 @@ def SQLQuery():
 						ROW_NUMBER() OVER (ORDER BY country_code desc,city_name desc) as countdown_order,
 						AVG(latitude) AS latitude, 
 						AVG(longitude) AS longitude, 
-						city_name, 
-						country_code
+						city_name,
+						region_name, 
+						country_code						
 						FROM ip2location_db11
 						where country_code = '%s'
-						GROUP BY country_code, city_name
+						GROUP BY country_code, region_name, city_name
 						ORDER BY country_code, city_name 	
 						""" % (args.country) 
 	if args.country == "ALL":
@@ -313,9 +324,10 @@ def SQLQuery():
 						AVG(latitude) AS latitude, 
 						AVG(longitude) AS longitude, 
 						city_name, 
-						country_code
+						region_name,
+						country_code						
 						FROM ip2location_db11
-						GROUP BY country_code, city_name
+						GROUP BY country_code, region_name, city_name
 						ORDER BY country_code, city_name
 						""" 
 	if args.city: 
@@ -325,10 +337,11 @@ def SQLQuery():
 						AVG(latitude) AS latitude, 
 						AVG(longitude) AS longitude, 
 						city_name, 
-						country_code
+						region_name,
+						country_code						
 						FROM ip2location_db11
 						where city_name = '%s'
-						GROUP BY country_code, city_name
+						GROUP BY country_code, region_name, city_name
 						ORDER BY country_code, city_name 
 						""" % (args.city)
 	if args.country and args.rownumber:
@@ -341,35 +354,37 @@ def SQLQuery():
 							AVG(latitude) AS latitude, 
 							AVG(longitude) AS longitude, 
 							city_name, 
-							country_code   
+							region_name,
+							country_code						
 							FROM  ip2location_db11 
 							where country_code = '%s'
-							GROUP BY country_code, city_name
+							GROUP BY country_code, region_name, city_name
 						) as D
 						where countdown_order < %s
 						ORDER BY country_code, city_name 	
 						""" % (args.country,args.rownumber)
 	if args.country and args.city:
 		sqlStatement = 	"""
-						WITH cte AS
-						(   SELECT *, ROW_NUMBER() OVER (PARTITION BY latitude, longitude ORDER BY latitude, longitude) AS rn,
-							DENSE_RANK() OVER (ORDER BY city_name desc) as countdown_order
-							FROM ip2location_db11
-							where country_code = '%s'
-							and city_name = '%s'
-						)
-						SELECT countdown_order,latitude,longitude,city_name,country_code
-						FROM cte
-						WHERE rn = 1
-						order by city_name 		
+						SELECT 
+						ROW_NUMBER() OVER (ORDER BY country_code desc,city_name desc) as countdown_order,
+						AVG(latitude) AS latitude, 
+						AVG(longitude) AS longitude, 
+						city_name, 
+						region_name,
+						country_code						
+						FROM ip2location_db11
+						where country_code = '%s'
+						and city_name = '%s'
+						GROUP BY country_code, region_name, city_name
+						ORDER BY country_code, city_name		
 						""" % (args.country,args.city)
 		
 	try:	
 		cursor.execute(sqlStatement)
 		
-		for countdown_order, latitude, longitude,city_name,country_code in cursor:
-			get_place_for(countdown_order, latitude, longitude,city_name,country_code,url1)
-			Print_Total(countdown_order,latitude, longitude,city_name,country_code,Place_found,page_no,Total_Places_Found)
+		for countdown_order, latitude, longitude,city_name,region_name,country_code in cursor:
+			get_place_for(countdown_order, latitude, longitude,city_name,region_name,country_code,url1)
+			Print_Total(countdown_order,latitude, longitude,city_name,region_name,country_code,Place_found,page_no,Total_Places_Found)
 			
 	finally:
 		cursor.close()
