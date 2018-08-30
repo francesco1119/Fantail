@@ -60,7 +60,7 @@ class style:
 
 #####################################################################
 # Enter here your Google Places API key								#
-MyGooglePlacesAPIKey = 'MyBeautifulAPIKey'	#
+MyGooglePlacesAPIKey = 'MyBeautifulKey'	#
 																	#
 # Enter here your database credentials 								#
 Connection_Details = ('DRIVER={SQL Server};'						#
@@ -76,12 +76,13 @@ url1 = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?'
 url2 = 'https://maps.googleapis.com/maps/api/place/details/json?'
 #url_next = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=%s&key=%s' % (next_page_token, api_key)
 next_page_token = ""
-	
+Total_Places_Found = 0
+Place_found = 0	
 
 # GET all Places for a certain Latitude and Longitude
 def GET_Places_for_Lat_Lon(url1):
 	global page_no
-	global Total_Places_Found
+	#global Total_Places_Found
 	global response_data1
 	url = url1  				
 	params1 = {'location': '%s,%s' % (latitude,longitude),                                   
@@ -92,7 +93,7 @@ def GET_Places_for_Lat_Lon(url1):
 	response_data1 = response1.json()
 	#page_no += 1
 	page_no = 0
-	Total_Places_Found = 0
+	#Total_Places_Found = 0
 # GET all details for a single Place_ID
 def GET_Single_Place_Details(url2):
 	
@@ -161,13 +162,14 @@ def get_place_for(countdown_order,latitude, longitude,city_name,region_name,coun
 		
 	global Total_Places_Found
 	
+	
 	connection2 = pyodbc.connect(Connection_Details)										
 	cursor2 = connection2.cursor()
 
 	connection3 = pyodbc.connect(Connection_Details)										
 	cursor3 = connection3.cursor()	
 	
-	Place_found = 0
+	
 	
 	
 	
@@ -275,6 +277,7 @@ def get_place_for(countdown_order,latitude, longitude,city_name,region_name,coun
 	page_no += 1	
 	#Print_Total(countdown_order,latitude, longitude,city_name,region_name,country_code,Place_found,page_no,Total_Places_Found)
 	return Total_Places_Found
+	return Place_found
 	time.sleep(args.speed)
 	
 def Print_Total(countdown_order,latitude, longitude,city_name,region_name,country_code,Place_found,page_no,Total_Places_Found): 
