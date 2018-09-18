@@ -60,7 +60,7 @@ class style:
 
 #####################################################################
 # Enter here your Google Places API key								#
-MyGooglePlacesAPIKey = 'MyBeautifulKey'	#
+MyGooglePlacesAPIKey = 'MyBeautifulAPIkey'	#
 																	#
 # Enter here your database credentials 								#
 Connection_Details = ('DRIVER={SQL Server};'						#
@@ -82,7 +82,7 @@ Place_found = 0
 # GET all Places for a certain Latitude and Longitude
 def GET_Places_for_Lat_Lon(url1):
 	global page_no
-	#global Total_Places_Found
+
 	global response_data1
 	url = url1  				
 	params1 = {'location': '%s,%s' % (latitude,longitude),                                   
@@ -93,7 +93,7 @@ def GET_Places_for_Lat_Lon(url1):
 	response_data1 = response1.json()
 	#page_no += 1
 	page_no = 0
-	#Total_Places_Found = 0
+
 # GET all details for a single Place_ID
 def GET_Single_Place_Details(url2):
 	
@@ -148,7 +148,7 @@ def Google_call_for_details():
 		GoogleLatitude = response_data2['result']['geometry']['location'].get("lat", None)
 		GoogleLongitude = response_data2['result']['geometry']['location'].get("lng", None)
 		GoogleRating = response_data2['result'].get("rating", None)
-		GoogleTypes = json.dumps(response_data2['result']['types'])
+		GoogleTypes = json.dumps(response_data2['result']['types'])			# genius!
 		GoogleURL = response_data2['result'].get("url", None)
 		GoogleWebsite = response_data2['result'].get("website", None)
 		time.sleep(args.speed)
