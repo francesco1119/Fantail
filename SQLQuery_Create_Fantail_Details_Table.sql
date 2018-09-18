@@ -1,18 +1,34 @@
-/*    ==Scripting Parameters==
+USE [ip2location]
+GO
 
-    Source Server Version : SQL Server 2016 (13.0.4001)
-    Source Database Engine Edition : Microsoft SQL Server Enterprise Edition
-    Source Database Engine Type : Standalone SQL Server
+/****** Object:  Table [dbo].[GoogleNearbySearch]    Script Date: 18/09/2018 21:20:43 ******/
+SET ANSI_NULLS ON
+GO
 
-    Target Server Version : SQL Server 2016
-    Target Database Engine Edition : Microsoft SQL Server Enterprise Edition
-    Target Database Engine Type : Standalone SQL Server
-*/
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[GoogleNearbySearch](
+	[Place_ID] [nvarchar](50) NOT NULL,
+	[ID] [nvarchar](50) NULL,
+	[Name] [nvarchar](100) NULL,
+	[Latitude] [decimal](20, 8) NULL,
+	[Longitude] [decimal](20, 8) NULL,
+	[Rating] [decimal](2, 1) NULL,
+	[Types] [nvarchar](max) NULL,
+	[Vicinity] [nvarchar](max) NULL,
+ CONSTRAINT [PK_Place_ID] PRIMARY KEY NONCLUSTERED 
+(
+	[Place_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
 
 USE [ip2location]
 GO
 
-/****** Object:  Table [dbo].[GoogleDetails]    Script Date: 27/09/2017 10:46:56 PM ******/
+/****** Object:  Table [dbo].[GoogleDetails]    Script Date: 18/09/2018 21:20:34 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -20,23 +36,27 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[GoogleDetails](
-	[Place_ID] [nchar](50) NULL,
-	[ID] [nchar](50) NULL,
-	[Name] [nchar](100) NULL,
+	[Place_ID] [nvarchar](50) NOT NULL,
+	[ID] [nvarchar](50) NULL,
+	[Name] [nvarchar](100) NULL,
 	[Street_Number] [nchar](50) NULL,
-	[Street] [nchar](100) NULL,
-	[Postal_Code] [nchar](50) NULL,
-	[City] [nchar](100) NULL,
-	[Area1] [nchar](100) NULL,
-	[Area2] [nchar](100) NULL,
-	[Country] [nchar](50) NULL,
-	[CountryCode] [nchar](50) NULL,
-	[Phone] [nchar](50) NULL,
-	[Latitude] [nchar](50) NULL,
-	[Longitude] [nchar](50) NULL,
-	[Types] [varchar](max) NULL,
-	[Rating] [nchar](50) NULL,
-	[GoogleURL] [nchar](200) NULL,
-	[Website] [varchar](max) NULL
+	[Street] [nvarchar](100) NULL,
+	[Postal_Code] [nvarchar](50) NULL,
+	[City] [nvarchar](100) NULL,
+	[Area1] [nvarchar](100) NULL,
+	[Area2] [nvarchar](100) NULL,
+	[Country] [nvarchar](50) NULL,
+	[CountryCode] [char](3) NULL,
+	[Phone] [nchar](30) NULL,
+	[Latitude] [decimal](9, 6) NULL,
+	[Longitude] [decimal](9, 6) NULL,
+	[Types] [nvarchar](max) NULL,
+	[Rating] [decimal](2, 1) NULL,
+	[GoogleURL] [varchar](max) NULL,
+	[Website] [varchar](max) NULL,
+ CONSTRAINT [PK__GoogleDe__D5C5153D113DA6D1] PRIMARY KEY NONCLUSTERED 
+(
+	[Place_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
