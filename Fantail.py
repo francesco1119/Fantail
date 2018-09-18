@@ -7,10 +7,10 @@ import argparse
 import sys
 import pyodbc
 import time
+import datetime
 import colorama
 colorama.init()
-import decimal 
-decimal.getcontext().prec = 4	
+from moneyed import Money	
 
 # Here we organize the choices command line aruments 							
 parser = argparse.ArgumentParser()													
@@ -73,7 +73,7 @@ long_field = {}
 short_field = {}
 element_count = 0
 element_saved = 0
-Total_cost = decimal.Decimal(0.00)
+Total_cost = Money(amount='0.00', currency='USD')
 
 
 def Search_URL(countdown_order,latitude, longitude,city_name,region_name,country_code):
@@ -88,7 +88,7 @@ def Search_URL(countdown_order,latitude, longitude,city_name,region_name,country
 				}
 	
 	search_location = gmaps.places_nearby(**params)
-	Total_cost += decimal.Decimal(0.01)
+	Total_cost += Money(amount='0.01', currency='USD')
 	if search_location['status'] == 'OK':														# Check if the API is 'OK'
 		nearby_search(search_location)
 	elif search_location['status'] == 'ZERO_RESULTS':
@@ -123,7 +123,7 @@ def nearby_search(search_location):
 			time.sleep(5)
 			params.update({"page_token": search_location['next_page_token']})
 			search_location = gmaps.places_nearby(**params)
-			Total_cost += decimal.Decimal(0.01)
+			Total_cost += Money(amount='0.01', currency='USD')
 			nearby_search(search_location)
 		
 		Search_if_Place_ID_exists(Place_ID,ID,Name,Latitude,Longitude,Rating,Types,Vicinity)
@@ -185,7 +185,7 @@ def Search_For_Place_ID(Place_ID):
 	
 	params = {'place_id': Place_ID}
 	search_detials = gmaps.place(**params)
-	Total_cost += decimal.Decimal(0.01)
+	Total_cost += Money(amount='0.01', currency='USD')
 	
 	if search_detials['status'] == 'OK':														# Check if the API is 'OK'
 		Search_Details(search_detials)
@@ -275,12 +275,12 @@ def print_totals(countdown_order, city_name,region_name,country_code):
 	global element_saved
 	
 	if element_count == 0:
-		print (fg.RED,style.BRIGHT,countdown_order,")","Total places found1:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,Total_cost,style.RESET_ALL)
+		print (fg.RED,style.BRIGHT,countdown_order,")","Total places found1:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,Total_cost,"(",datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),")",style.RESET_ALL)
 	else:
 		if element_count != 0 and element_count == element_saved:
-			print (fg.GREEN,style.BRIGHT,countdown_order,")","Total places found2:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,Total_cost,style.RESET_ALL)
+			print (fg.GREEN,style.BRIGHT,countdown_order,")","Total places found2:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,Total_cost,"(",datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),")",style.RESET_ALL)
 		elif element_count > element_saved:
-			print (fg.YELLOW,style.BRIGHT,countdown_order,")","Total places found3:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,Total_cost,style.RESET_ALL)
+			print (fg.YELLOW,style.BRIGHT,countdown_order,")","Total places found3:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,Total_cost,"(",datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),")",style.RESET_ALL)
 	element_count = 0
 	element_saved = 0
 	
