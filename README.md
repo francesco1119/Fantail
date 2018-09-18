@@ -48,7 +48,9 @@ optional arguments:
   --rownumber   Input a specific row number 
   ```
 
-Pretty easy to understand how to use it, right? 
+Pretty easy to understand how to use it, right?
+
+![New_Fantail](https://github.com/francesco1119/Fantail/blob/master/images/New.PNG)
 
 Open an Issue if you have any question.
 
