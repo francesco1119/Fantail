@@ -7,23 +7,23 @@ How to Install
 ======
 
 1) Download and install DB11 (IP2Location™ LITE IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE Database) from [here](https://http://lite.ip2location.com/database/ip-country-region-city-latitude-longitude-zipcode-timezone), follow the instruction on the same download page and you will have the DB imported into SQL Server in a minute. 
-2) Then install `pip install requests argparse pyodbc json time datetime colorama fabric colors`
-3) Download the query `SQLQuery_Create_Fantai_Details_Table.sql` and run it against your IP2location database: a table will be created and there Fantail will store your precious data 
+2) Then install `pip install googlemaps json argparse pyodbc time datetime colorama moneyed`
+3) Download the query `SQLQuery_Create_Fantai_Details_Table.sql` and run it against your IP2location database: 2 tables will be created and there Fantail will store your precious data 
 4) Configure ODBC to connect to Microsoft SQL Server (help yourself [following this guide](https://www.youtube.com/watch?v=tUiaK5fRH7k&ab_channel=itgeared))
-5) Now open `Fantail.py` and insert your Google Places API into the variable `MyGooglePlacesAPIKey` and your ODBC credentials into the variable `Connection_Details`
+5) Now open `Fantail.py` and insert your Google Places API into the variable `gmaps` and your ODBC credentials into the variable `Connection_Details`
 
 ```
-#####################################################################
-# Enter here your Google Places API key				    #
-MyGooglePlacesAPIKey = 'PutYourKeyHere'				    #
-								    #
-# Enter here your database credentials 				    #
-Connection_Details = ('DRIVER={SQL Server};'			    #
-		      'SERVER=ASPIRES3;'			    #
-		      'DATABASE=ip2location;'	     		    #
-		      'UID=sqlninja;'				    #
-		      'PWD=sqlninja')		     		    #
-#####################################################################
+#############################################################################
+# Enter here your Google Places API key						#
+gmaps = googlemaps.Client(key='MyBeautifulAPIKey')	#
+										#
+# Enter here your database credentials 						#
+Connection_Details = ('DRIVER={SQL Server};'					#
+					  'SERVER=ASPIRES3;'			#
+					  'DATABASE=ip2location;'		#
+					  'UID=sqlninja;'			#
+					  'PWD=sqlninja')			#
+#############################################################################
 ```
 
 How to use it 
@@ -35,25 +35,22 @@ You don't have to write not even 1 line of code; so sit down and relax because I
 
 Try you run `python Fantail.py --help` and you will see:
 ```
-usage: Fantail.py [-h] [--country] [--city] [--category] [--radius] [--do] [--rownumber]
+usage: Fantail.py [-h] [--country] [--city] [--category] [--radius]
+                  [--verbose] [--rownumber]
 
 optional arguments:
   -h, --help    show this help message and exit
-  --country     input a country code (like "US" or "FR" or "NZ")
-  --city        enter a city name (like "New York" or "Paris" or "Auckland")
-  --category    enter a business category
-  --radius      enter a radius between 0 and 50000 (default is 25000)
-  --do          arguments are "show" or "save"
-  --rownumber   input a specific row number 
+  --country     Input a country code (like "US" or "FR" or "NZ"), or "ALL" for all countries
+  --city        Enter a city name (like "New York" or "Paris" or "Auckland")
+  --category    Enter a business category
+  --radius      Enter a radius between 0 and 50000 (default is 10000)
+  --verbose     Print more data
+  --rownumber   Input a specific row number 
   ```
 
-Pretty easy to understand how to use it, right? So if you use the command `--do "show"` Fantail will show you what it find on the terminal, like this: 
+Pretty easy to understand how to use it, right? 
 
-![Fantail_show](https://github.com/francesco1119/Fantail/blob/master/images/show%20colors.PNG)
-
-While if you use the option `--do "save"` it will just tell you what it has saved. Yes, as you can see it doesn't save double places in your database so your DB is clean and doesn't need extra care after a Fantail search:
-
-![Fantail_save](https://github.com/francesco1119/Fantail/blob/master/images/example%20multi%20color.PNG)
+Open an Issue if you have any question.
 
 How it works under the hood 
 ------
