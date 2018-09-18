@@ -1,17 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-# We import the requests module which allows us to make the API call
-import requests
-import argparse
-import pyodbc																		# Transfer data straight into Microsoft SQL Server
-import sys
+import googlemaps
 import json
+import argparse
+import sys
+import pyodbc
 import time
-import datetime
-from time import gmtime, strftime
 import colorama
 colorama.init()
+import decimal 
+decimal.getcontext().prec = 4	
 
 # Here we organize the choices command line aruments 							
 parser = argparse.ArgumentParser()													
@@ -19,14 +18,13 @@ parser.add_argument('--country', dest='country', type=str, help="input a country
 parser.add_argument('--city', dest='city', 		type=str, help= "enter a city name (like \"New York\" or \"Paris\" or \"Auckland\")", metavar='')					# Option: --city
 parser.add_argument('--category', dest='category', default='movie_theater', type=str, help="enter a business category",	metavar='')									# Option: --category
 parser.add_argument('--radius', dest='radius', default='10000', type=int, help="enter a radius between 0 and 50000 (default is 10000)",	metavar='')					# Option: --radius
-parser.add_argument('--speed', dest='speed', default='3', type=int, help="enter the number in seconds of speed (default is 3 seconds)",	metavar='')					# Option: --radius								
-parser.add_argument('--do', dest='do', default='show', type=str, choices=['show', 'save'], help="arguments are \"show\" or \"save\"", metavar='')					# Option: --do		
+parser.add_argument('--verbose', dest='verbose',help='Print more data',action='store_true')																# Option: --verbose		
 parser.add_argument('--rownumber', dest='rownumber', type=int, help="input a specific row number", metavar='') 														# Option: --rownumber
 args = parser.parse_args()
 # If user directory nothing print help
-if len(sys.argv) < 2:
-    parser.print_help()
-    sys.exit(1)
+#if len(sys.argv) < 2:
+#    parser.print_help()
+#    sys.exit(1)
 # Argparse ends here
 
 # Terminal color definitions
@@ -58,245 +56,234 @@ class style:
 	NORMAL    = '\033[22m'
 	RESET_ALL = '\033[0m'
 
-#####################################################################
-# Enter here your Google Places API key								#
-MyGooglePlacesAPIKey = 'MyBeautifulAPIkey'	#
-																	#
-# Enter here your database credentials 								#
-Connection_Details = ('DRIVER={SQL Server};'						#
-					  'SERVER=ASPIRES3;'							#
-					  'DATABASE=ip2location;'						#
-					  'UID=sqlninja;'								#
-					  'PWD=sqlninja')								#
-#####################################################################
+	
+#############################################################################
+# Enter here your Google Places API key										#
+gmaps = googlemaps.Client(key='MyBeautifulAPIKey')	#
+																			#
+# Enter here your database credentials 										#
+Connection_Details = ('DRIVER={SQL Server};'								#
+					  'SERVER=ASPIRES3;'									#
+					  'DATABASE=ip2location;'								#
+					  'UID=sqlninja;'										#
+					  'PWD=sqlninja')										#
+#############################################################################
 
 long_field = {}
 short_field = {}
-url1 = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?'
-url2 = 'https://maps.googleapis.com/maps/api/place/details/json?'
-#url_next = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=%s&key=%s' % (next_page_token, api_key)
-next_page_token = ""
-Total_Places_Found = 0
-Place_found = 0	
+element_count = 0
+element_saved = 0
+Total_cost = decimal.Decimal(0.00)
 
-# GET all Places for a certain Latitude and Longitude
-def GET_Places_for_Lat_Lon(url1):
-	global page_no
 
-	global response_data1
-	url = url1  				
-	params1 = {'location': '%s,%s' % (latitude,longitude),                                   
-		      'radius': '%s' % (args.radius),												
-		      'type': '%s' % (args.category),
-		      'key': MyGooglePlacesAPIKey}														
-	response1 = requests.get(url = url1, params=params1)															
-	response_data1 = response1.json()
-	#page_no += 1
-	page_no = 0
+def Search_URL(countdown_order,latitude, longitude,city_name,region_name,country_code):
+	
+	global search_location
+	global params
+	global Total_cost
 
-# GET all details for a single Place_ID
-def GET_Single_Place_Details(url2):
+	params = {'location': '%s,%s' % (latitude,longitude),
+				'radius': '%s' % (args.radius),
+				'type': '%s' % (args.category)
+				}
 	
-	global response_data2
-	url = url2  				
-	params2 = {'placeid': SQL_Place_ID,                                   
-			'key': MyGooglePlacesAPIKey}														
-	response2 = requests.get(url = url2, params=params2)															
-	response_data2 = response2.json()
+	search_location = gmaps.places_nearby(**params)
+	Total_cost += decimal.Decimal(0.01)
+	if search_location['status'] == 'OK':														# Check if the API is 'OK'
+		nearby_search(search_location)
+	elif search_location['status'] == 'ZERO_RESULTS':
+		pass
+		#print_totals(countdown_order,city_name,region_name,country_code)
+	else:
+		print ('API query returned:',search_location)
 
-def Google_call_for_details():
+def nearby_search(search_location):
 	
-	global Googleplace_id
-	global Googleid
-	global GoogleName
-	global GoogleStreet_Number
-	global GoogleStreet
-	global GooglePostal_Code
-	global GoogleCity
-	global GoogleArea1
-	global GoogleArea2
-	global GoogleCountry
-	global GoogleCountryCode
-	global GooglePhone
-	global GoogleLatitude
-	global GoogleLongitude
-	global GoogleTypes
-	global GoogleRating
-	global GoogleURL
-	global GoogleWebsite
+	global element_count
+	global Place_ID
+	global ID
+	global Name
+	global Latitude
+	global Longitude
+	global Rating
+	global Types
+	global Vicinity
+	global Total_cost
 	
-
-	GET_Single_Place_Details(url2)	
-	
-	if response_data2['status'] == 'OK':
-		Googleplace_id = response_data2['result'].get("place_id", None)
-		Googleid = response_data2['result'].get("id", None)
-		GoogleName = response_data2['result'].get("name", None)
-		for e in response_data2['result']['address_components']:
-			for t in e['types']:
-				long_field[t] = e['long_name']
-				short_field[t] = e['short_name']
-				GoogleStreet_Number = long_field.get("street_number", None)
-				GoogleStreet = long_field.get("route", None)
-				GooglePostal_Code = long_field.get("postal_code", None)
-				GoogleCity = long_field.get("locality", None)
-				GoogleArea1 = long_field.get("administrative_area_level_1", None)
-				GoogleArea2 = long_field.get("administrative_area_level_2", None)
-				GoogleCountry = long_field.get("country", None)
-				GoogleCountryCode = short_field.get("country", None)
-		GooglePhone = response_data2['result'].get("international_phone_number", None)
-		GoogleLatitude = response_data2['result']['geometry']['location'].get("lat", None)
-		GoogleLongitude = response_data2['result']['geometry']['location'].get("lng", None)
-		GoogleRating = response_data2['result'].get("rating", None)
-		GoogleTypes = json.dumps(response_data2['result']['types'])			# genius!
-		GoogleURL = response_data2['result'].get("url", None)
-		GoogleWebsite = response_data2['result'].get("website", None)
-		time.sleep(args.speed)
-  
-def get_place_for(countdown_order,latitude, longitude,city_name,region_name,country_code,url1):                                                      
-	
-	global SQL_Place_ID
-	global next_page_token
-	global Place_found
-	global page_no
+	for element in search_location['results']:
+		Place_ID = element.get('place_id',None)
+		ID = element.get('id',None)
+		Name = element.get('name',None)
+		Latitude = element['geometry']['location'].get('lat',None)
+		Longitude = element['geometry']['location'].get('lng',None)
+		Rating = element.get('rating',None)
+		Types = json.dumps(element.get('types',None))		# Genius!
+		Vicinity = element.get('vicinity',None)
+		if 'next_page_token' in search_location.keys(): 
+			time.sleep(5)
+			params.update({"page_token": search_location['next_page_token']})
+			search_location = gmaps.places_nearby(**params)
+			Total_cost += decimal.Decimal(0.01)
+			nearby_search(search_location)
 		
-	global Total_Places_Found
-	
-	
-	connection2 = pyodbc.connect(Connection_Details)										
-	cursor2 = connection2.cursor()
+		Search_if_Place_ID_exists(Place_ID,ID,Name,Latitude,Longitude,Rating,Types,Vicinity)
+		element_count += 1
 
-	connection3 = pyodbc.connect(Connection_Details)										
-	cursor3 = connection3.cursor()	
-	
-	
-	
-	
-	
-	GET_Places_for_Lat_Lon(url1)
-	
-	sqlStatement = 	"""
-					INSERT INTO GoogleDetails (	Place_ID,
-												ID,
-												Name,
-												Street_Number,
-												Street,
-												Postal_Code,
-												City,
-												Area1,
-												Area2,
-												Country,
-												CountryCode,
-												Phone,
-												Latitude,
-												Longitude,
-												Types,
-												Rating,
-												GoogleURL,
-												Website
-												) 
-					values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-					""" 
-	# Here we go to store JSON elements for SQL
-	
-	if response_data1['status'] == 'ZERO_RESULTS':
-		print (fg.RED,style.BRIGHT + '{0}) Nothing found for: {1}, {2} {3} at {4}'.format(countdown_order,city_name,region_name,country_code,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),style.RESET_ALL))
-		time.sleep(args.speed)
+	#return element
 		
+def Search_if_Place_ID_exists(Place_ID,ID,Name,Latitude,Longitude,Rating,Types,Vicinity):
 	
-	elif response_data1['status'] == 'OVER_QUERY_LIMIT':
-		while response_data1['status'] == 'OVER_QUERY_LIMIT':
-			print (fg.RED,style.BRIGHT +'{0}) OVER_QUERY_LIMIT for: {1}, {2} {3} at {4}. I will try again in 1 hour.'.format(countdown_order,city_name,region_name,country_code,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),style.RESET_ALL))
-			time.sleep(3600)
-			get_place_for(countdown_order,latitude, longitude,city_name,region_name,country_code,url1)
+	global element_saved
 	
-	elif response_data1['status'] == 'OK':
-		Total_Places_Found += len(response_data1['results'])
+	cnxn = pyodbc.connect(Connection_Details)
+	CursorSearch = cnxn.cursor()
+	sqlSearchPlace_ID = 	"""
+							select Place_ID 
+							from GoogleNearbySearch 
+							where Place_ID = '%s'
+							""" % (Place_ID)
+	CursorSearch.execute(sqlSearchPlace_ID)
+	row = CursorSearch.fetchone()
+	if row == None:
+		element_saved += 1
+		save_to_mssql(Place_ID,ID,Name,Latitude,Longitude,Rating,Types,Vicinity)
+		Search_For_Place_ID(Place_ID)
+		if args.verbose:
+			print (fg.GREEN,style.BRIGHT,Name,style.RESET_ALL,":",Vicinity)
+	else: 
+		if args.verbose:
+			print (fg.YELLOW,style.BRIGHT,Name,style.RESET_ALL,":",Vicinity)
+		pass
+	
+	return element_saved
 
-		for SQL_element in response_data1['results']:
-			SQL_Place_ID = SQL_element['place_id']
-			SQL_Latitude = SQL_element['geometry']['location']['lat']
-			SQL_Longitude = SQL_element['geometry']['location']['lng']
-			
-			if args.do == 'show':
-				Google_call_for_details()
-				print (fg.GREEN,style.BRIGHT + '+' + style.RESET_ALL,GoogleName,':',GoogleStreet_Number,GoogleStreet,', ',GoogleCity,GoogleCountryCode,'(',GoogleLatitude,',',GoogleLongitude,')')			
-			
-			elif args.do == 'save':
-				sqlStatementPlace_ID = 	"""
-										select Place_ID 
-										from GoogleDetails 
-										where Place_ID = '%s'
-										""" % (SQL_Place_ID)
-				cursor3.execute(sqlStatementPlace_ID)
-				row = cursor3.fetchone()
-				if row == None:
-					Google_call_for_details()
-				else:
-					continue
-			
-				cursor2.execute(sqlStatement, \
-								Googleplace_id, \
-								Googleid, \
-								GoogleName, \
-								GoogleStreet_Number, \
-								GoogleStreet, \
-								GooglePostal_Code, \
-								GoogleCity, \
-								GoogleArea1, \
-								GoogleArea2, \
-								GoogleCountry, \
-								GoogleCountryCode, \
-								GooglePhone, \
-								GoogleLatitude, \
-								GoogleLongitude, \
-								GoogleTypes, \
-								GoogleRating, \
-								GoogleURL, \
-								GoogleWebsite)
-				connection2.commit()
-			
-				Place_found += 1			
-			else:
-				pass				
-			
-		#Next_page_token
-		#test next_page_token
-		
-		if 'next_page_token' in response_data1:
-			#page_no += 1
-			next_page_token = response_data1['next_page_token']
-			#print (fg.GREEN,style.BRIGHT +' On page number', page_no, 'found:', len(response_data1['results']),'places',style.RESET_ALL)
-			url1 = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=%s&key=%s' % (next_page_token, MyGooglePlacesAPIKey)
-			get_place_for(countdown_order,latitude, longitude,city_name,region_name,country_code,url1)
-			
-		else:
-			#page_no += 1
-			#print (fg.GREEN,style.BRIGHT +' On page number', page_no, ',', 'found:', len(response_data1['results']),'places',style.RESET_ALL)
-			pass
-	page_no += 1	
-	#Print_Total(countdown_order,latitude, longitude,city_name,region_name,country_code,Place_found,page_no,Total_Places_Found)
-	return Total_Places_Found
-	return Place_found
-	time.sleep(args.speed)
-	
-def Print_Total(countdown_order,latitude, longitude,city_name,region_name,country_code,Place_found,page_no,Total_Places_Found): 
-	if args.do == 'show':
-		if Total_Places_Found == 0:
-			pass
-		else:
-			print (fg.GREEN,style.BRIGHT + '{0}) Total Places found: {1} near: {2}, {3} {4} at {5}'.format(countdown_order,Total_Places_Found,city_name,region_name,country_code,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),style.RESET_ALL))
+def save_to_mssql(Place_ID,ID,Name,Latitude,Longitude,Rating,Types,Vicinity):
 
-	elif args.do == 'save':
-		if Total_Places_Found == 0:
-			pass
-		elif Place_found != Total_Places_Found:
-			print (fg.YELLOW,style.BRIGHT +'{0}) Places found {1}, but Places saved {2} (all already in database) near: {3}, {4} {5} at {6}'.format(countdown_order,Total_Places_Found,Place_found,city_name,region_name,country_code,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),style.RESET_ALL))
-			time.sleep(args.speed)
-		elif Place_found == Total_Places_Found:
-			print (fg.GREEN,style.BRIGHT +'{0}) Places found {1}, Places saved {2} near: {3}, {4} {5} at {6}'.format(countdown_order,Total_Places_Found,Place_found,city_name,region_name,country_code,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),style.RESET_ALL))
-			time.sleep(args.speed)	
-			
+	cnxn_nearby_search = pyodbc.connect(Connection_Details)
+	CursorSearch = cnxn_nearby_search.cursor()
+	SQLCommand = 	"""
+					INSERT INTO GoogleNearbySearch (
+													Place_ID,
+													ID,
+													Name,
+													Latitude,
+													Longitude,
+													Rating,
+													Types,
+													Vicinity
+													) 
+					values (?,?,?,?,?,?,?,?)
+					"""
+	Values = [Place_ID,ID,Name,Latitude,Longitude,Rating,Types,Vicinity]
+	
+	CursorSearch.execute(SQLCommand, Values)
+	cnxn_nearby_search.commit()
+
+def Search_For_Place_ID(Place_ID):
+	
+	global Total_cost
+	
+	params = {'place_id': Place_ID}
+	search_detials = gmaps.place(**params)
+	Total_cost += decimal.Decimal(0.01)
+	
+	if search_detials['status'] == 'OK':														# Check if the API is 'OK'
+		Search_Details(search_detials)
+	else:
+		print ('API *details* query returned:',search_detials)
+	
+def Search_Details(search_detials):
+	
+	Googleplace_id = search_detials['result'].get("place_id", None)
+	Googleid = search_detials['result'].get("id", None)
+	GoogleName = search_detials['result'].get("name", None)
+	for e in search_detials['result']['address_components']:
+		for t in e['types']:
+			long_field[t] = e['long_name']
+			short_field[t] = e['short_name']
+			GoogleStreet_Number = long_field.get("street_number", None)
+			GoogleStreet = long_field.get("route", None)
+			GooglePostal_Code = long_field.get("postal_code", None)
+			GoogleCity = long_field.get("locality", None)
+			GoogleArea1 = long_field.get("administrative_area_level_1", None)
+			GoogleArea2 = long_field.get("administrative_area_level_2", None)
+			GoogleCountry = long_field.get("country", None)
+			GoogleCountryCode = short_field.get("country", None)
+	GooglePhone = search_detials['result'].get("international_phone_number", None)
+	GoogleLatitude = search_detials['result']['geometry']['location'].get("lat", None)
+	GoogleLongitude = search_detials['result']['geometry']['location'].get("lng", None)
+	GoogleRating = search_detials['result'].get("rating", None)
+	GoogleTypes = json.dumps(search_detials['result']['types'])									# genius!
+	GoogleURL = search_detials['result'].get("url", None)
+	GoogleWebsite = search_detials['result'].get("website", None)
+	
+	Save_Place_Details(Googleplace_id,Googleid,GoogleName,GoogleStreet_Number,GoogleStreet,GooglePostal_Code,GoogleCity,GoogleArea1,GoogleArea2,GoogleCountry,GoogleCountryCode,GooglePhone,GoogleLatitude,GoogleLongitude,GoogleTypes,GoogleRating,GoogleURL,GoogleWebsite)
+	
+def Save_Place_Details(Googleplace_id,Googleid,GoogleName,GoogleStreet_Number,GoogleStreet,GooglePostal_Code,GoogleCity,GoogleArea1,GoogleArea2,GoogleCountry,GoogleCountryCode,GooglePhone,GoogleLatitude,GoogleLongitude,GoogleTypes,GoogleRating,GoogleURL,GoogleWebsite):
+	
+	# We connect to SQL Server Management Studio
+	connection_details = pyodbc.connect(Connection_Details)											
+	#cursor = connection.cursor()
+	CursorSaveDetails = connection_details.cursor()
+
+	SQL_Save_Details = 	"""
+						INSERT INTO GoogleDetails (	Place_ID,
+													ID,
+													Name,
+													Street_Number,
+													Street,
+													Postal_Code,
+													City,
+													Area1,
+													Area2,
+													Country,
+													CountryCode,
+													Phone,
+													Latitude,
+													Longitude,
+													Types,
+													Rating,
+													GoogleURL,
+													Website
+													) 
+						values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+						""" 
+	
+	CursorSaveDetails.execute(SQL_Save_Details, \
+					Googleplace_id, \
+					Googleid, \
+					GoogleName, \
+					GoogleStreet_Number, \
+					GoogleStreet, \
+					GooglePostal_Code, \
+					GoogleCity, \
+					GoogleArea1, \
+					GoogleArea2, \
+					GoogleCountry, \
+					GoogleCountryCode, \
+					GooglePhone, \
+					GoogleLatitude, \
+					GoogleLongitude, \
+					GoogleTypes, \
+					GoogleRating, \
+					GoogleURL, \
+					GoogleWebsite)
+	connection_details.commit()
+	
+def print_totals(countdown_order, city_name,region_name,country_code):
+	global element_count
+	global element_saved
+	
+	if element_count == 0:
+		print (fg.RED,style.BRIGHT,countdown_order,")","Total places found1:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,Total_cost,style.RESET_ALL)
+	else:
+		if element_count != 0 and element_count == element_saved:
+			print (fg.GREEN,style.BRIGHT,countdown_order,")","Total places found2:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,Total_cost,style.RESET_ALL)
+		elif element_count > element_saved:
+			print (fg.YELLOW,style.BRIGHT,countdown_order,")","Total places found3:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,Total_cost,style.RESET_ALL)
+	element_count = 0
+	element_saved = 0
+	
 def SQLQuery():
 
 	global latitude
@@ -304,7 +291,8 @@ def SQLQuery():
 
 	# We connect to SQL Server Management Studio
 	connection = pyodbc.connect(Connection_Details)											
-	cursor = connection.cursor()
+	#cursor = connection.cursor()
+	CursorSearchLatLon = connection.cursor()
 	
 	if args.country:
 		sqlStatement = 	"""
@@ -383,13 +371,12 @@ def SQLQuery():
 						""" % (args.country,args.city)
 		
 	try:	
-		cursor.execute(sqlStatement)
+		CursorSearchLatLon.execute(sqlStatement)
 		
-		for countdown_order, latitude, longitude,city_name,region_name,country_code in cursor:
-			get_place_for(countdown_order, latitude, longitude,city_name,region_name,country_code,url1)
-			Print_Total(countdown_order,latitude, longitude,city_name,region_name,country_code,Place_found,page_no,Total_Places_Found)
-			
+		for countdown_order, latitude, longitude,city_name,region_name,country_code in CursorSearchLatLon:
+			Search_URL(countdown_order,latitude, longitude,city_name,region_name,country_code)
+			print_totals(countdown_order, city_name,region_name,country_code)
 	finally:
-		cursor.close()
+		CursorSearchLatLon.close()
 		connection.close()  
 SQLQuery()
