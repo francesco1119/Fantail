@@ -11,15 +11,18 @@ import datetime
 import colorama
 colorama.init()
 from moneyed import Money	
+import decimal 
+decimal.getcontext().prec = 4 
+
 
 # Here we organize the choices command line aruments 							
 parser = argparse.ArgumentParser()													
-parser.add_argument('--country', dest='country', type=str, help="input a country code (like \"US\" or \"FR\" or \"NZ\"), or \"ALL\" for all countries", metavar='') # Option: --country
-parser.add_argument('--city', dest='city', 		type=str, help= "enter a city name (like \"New York\" or \"Paris\" or \"Auckland\")", metavar='')					# Option: --city
-parser.add_argument('--category', dest='category', default='movie_theater', type=str, help="enter a business category",	metavar='')									# Option: --category
-parser.add_argument('--radius', dest='radius', default='10000', type=int, help="enter a radius between 0 and 50000 (default is 10000)",	metavar='')					# Option: --radius
+parser.add_argument('--country', dest='country', type=str, help="Input a country code (like \"US\" or \"FR\" or \"NZ\"), or \"ALL\" for all countries", metavar='') # Option: --country
+parser.add_argument('--city', dest='city', 		type=str, help= "Enter a city name (like \"New York\" or \"Paris\" or \"Auckland\")", metavar='')					# Option: --city
+parser.add_argument('--category', dest='category', default='movie_theater', type=str, help="Enter a business category",	metavar='')									# Option: --category
+parser.add_argument('--radius', dest='radius', default='10000', type=int, help="Enter a radius between 0 and 50000 (default is 10000)",	metavar='')					# Option: --radius
 parser.add_argument('--verbose', dest='verbose',help='Print more data',action='store_true')																# Option: --verbose		
-parser.add_argument('--rownumber', dest='rownumber', type=int, help="input a specific row number", metavar='') 														# Option: --rownumber
+parser.add_argument('--rownumber', dest='rownumber', type=int, help="Input a specific row number", metavar='') 														# Option: --rownumber
 args = parser.parse_args()
 # If user directory nothing print help
 #if len(sys.argv) < 2:
@@ -59,7 +62,7 @@ class style:
 	
 #############################################################################
 # Enter here your Google Places API key										#
-gmaps = googlemaps.Client(key='MyBeautifulAPIKey')	#
+gmaps = googlemaps.Client(key='MyBeautifulLicense')	#
 																			#
 # Enter here your database credentials 										#
 Connection_Details = ('DRIVER={SQL Server};'								#
@@ -73,7 +76,7 @@ long_field = {}
 short_field = {}
 element_count = 0
 element_saved = 0
-Total_cost = Money(amount='0.00', currency='USD')
+Total_cost = decimal.Decimal(0.000)
 
 
 def Search_URL(countdown_order,latitude, longitude,city_name,region_name,country_code):
@@ -88,7 +91,7 @@ def Search_URL(countdown_order,latitude, longitude,city_name,region_name,country
 				}
 	
 	search_location = gmaps.places_nearby(**params)
-	Total_cost += Money(amount='0.01', currency='USD')
+	Total_cost += decimal.Decimal(0.032)
 	if search_location['status'] == 'OK':														# Check if the API is 'OK'
 		nearby_search(search_location)
 	elif search_location['status'] == 'ZERO_RESULTS':
@@ -123,7 +126,7 @@ def nearby_search(search_location):
 			time.sleep(5)
 			params.update({"page_token": search_location['next_page_token']})
 			search_location = gmaps.places_nearby(**params)
-			Total_cost += Money(amount='0.01', currency='USD')
+			Total_cost += decimal.Decimal(0.032)
 			nearby_search(search_location)
 		
 		Search_if_Place_ID_exists(Place_ID,ID,Name,Latitude,Longitude,Rating,Types,Vicinity)
@@ -185,7 +188,7 @@ def Search_For_Place_ID(Place_ID):
 	
 	params = {'place_id': Place_ID}
 	search_detials = gmaps.place(**params)
-	Total_cost += Money(amount='0.01', currency='USD')
+	Total_cost += decimal.Decimal(0.017)
 	
 	if search_detials['status'] == 'OK':														# Check if the API is 'OK'
 		Search_Details(search_detials)
@@ -275,12 +278,12 @@ def print_totals(countdown_order, city_name,region_name,country_code):
 	global element_saved
 	
 	if element_count == 0:
-		print (fg.RED,style.BRIGHT,countdown_order,")","Total places found1:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,Total_cost,"(",datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),")",style.RESET_ALL)
+		print (fg.RED,style.BRIGHT,countdown_order,")","Total places found:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,"-","$",Total_cost,"(",datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),")",style.RESET_ALL)
 	else:
 		if element_count != 0 and element_count == element_saved:
-			print (fg.GREEN,style.BRIGHT,countdown_order,")","Total places found2:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,Total_cost,"(",datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),")",style.RESET_ALL)
+			print (fg.GREEN,style.BRIGHT,countdown_order,")","Total places found:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,"-","$",Total_cost,"(",datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),")",style.RESET_ALL)
 		elif element_count > element_saved:
-			print (fg.YELLOW,style.BRIGHT,countdown_order,")","Total places found3:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,Total_cost,"(",datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),")",style.RESET_ALL)
+			print (fg.YELLOW,style.BRIGHT,countdown_order,")","Total places found:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,"-","$",Total_cost,"(",datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),")",style.RESET_ALL)
 	element_count = 0
 	element_saved = 0
 	
