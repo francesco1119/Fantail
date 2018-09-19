@@ -9,8 +9,7 @@ import pyodbc
 import time
 import datetime
 import colorama
-colorama.init()
-from moneyed import Money	
+colorama.init()	
 import decimal 
 decimal.getcontext().prec = 4 
 
@@ -62,7 +61,7 @@ class style:
 	
 #############################################################################
 # Enter here your Google Places API key										#
-gmaps = googlemaps.Client(key='MyBeautifulLicense')	#
+gmaps = googlemaps.Client(key='MyBeautifulAPIKey')	#
 																			#
 # Enter here your database credentials 										#
 Connection_Details = ('DRIVER={SQL Server};'								#
@@ -277,13 +276,15 @@ def print_totals(countdown_order, city_name,region_name,country_code):
 	global element_count
 	global element_saved
 	
+	The_Phrase = "{0}) Total places found: {1}, saved {2} in {3}, {4}, {5} - ${6} ({7})".format(countdown_order, element_count, element_saved,city_name,region_name,country_code,Total_cost,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+	
 	if element_count == 0:
-		print (fg.RED,style.BRIGHT,countdown_order,")","Total places found:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,"-","$",Total_cost,"(",datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),")",style.RESET_ALL)
+		print (fg.RED,style.BRIGHT,The_Phrase,style.RESET_ALL)
 	else:
 		if element_count != 0 and element_count == element_saved:
-			print (fg.GREEN,style.BRIGHT,countdown_order,")","Total places found:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,"-","$",Total_cost,"(",datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),")",style.RESET_ALL)
+			print (fg.GREEN,style.BRIGHT,The_Phrase,style.RESET_ALL,sep="")
 		elif element_count > element_saved:
-			print (fg.YELLOW,style.BRIGHT,countdown_order,")","Total places found:",element_count,",","saved:",element_saved,"in",city_name,",",region_name,",",country_code,"-","$",Total_cost,"(",datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),")",style.RESET_ALL)
+			print (fg.YELLOW,style.BRIGHT,The_Phrase,style.RESET_ALL)
 	element_count = 0
 	element_saved = 0
 	
