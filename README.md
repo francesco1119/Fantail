@@ -7,6 +7,7 @@
 <a href="https://github.com/francesco1119/Fantail/blob/master/LICENSE"><img alt="LICENSE" src="https://img.shields.io/github/license/francesco1119/Fantail.svg"></a>
 </p>
 </p>
+
 ## Fantail
 #### Fantail is a native New Zealand bird. 
 #### Fantail is also a Python script that will scrap Google Places API for you without crap and will save the results in a SQL Server Database 
