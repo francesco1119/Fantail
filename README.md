@@ -1,5 +1,5 @@
 <p align="center">
-![alt text](http://www.ngamanuimages.org.nz/images/lres/d03689.jpg)
+<img alt="Fantail" src="http://www.ngamanuimages.org.nz/images/lres/d03689.jpg" />
 <p align="center">
 [![GitHub issues](https://img.shields.io/github/issues/francesco1119/Fantail.svg)](https://github.com/francesco1119/Fantail/issues)
 [![GitHub forks](https://img.shields.io/github/forks/francesco1119/Fantail.svg)](https://github.com/francesco1119/Fantail/network)
