@@ -5,6 +5,7 @@
 <a href="https://github.com/francesco1119/Fantail/network"><img alt="network" src="https://img.shields.io/github/forks/francesco1119/Fantail.svg"></a>
 <a href="https://github.com/francesco1119/Fantail/stargazers"><img alt="stargazers" src="https://img.shields.io/github/stars/francesco1119/Fantail.svg"></a>
 <a href="https://github.com/francesco1119/Fantail/blob/master/LICENSE"><img alt="LICENSE" src="https://img.shields.io/github/license/francesco1119/Fantail.svg"></a>
+<a href="https://github.com/francesco1119/Fantail"><img alt="LICENSE" src="https://img.shields.io/pypi/pyversions/Fantail.svg"></a>
 </p>
 </p>
 
