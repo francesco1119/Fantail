@@ -1,6 +1,7 @@
 ![alt text](http://www.ngamanuimages.org.nz/images/lres/d03689.jpg)
 
 [![GitHub issues](https://img.shields.io/github/issues/francesco1119/Fantail.svg)](https://github.com/francesco1119/Fantail/issues)
+[![GitHub forks](https://img.shields.io/github/forks/francesco1119/Fantail.svg)](https://github.com/francesco1119/Fantail/network)
 
 ## Fantail
 #### Fantail is a native New Zealand bird. 
