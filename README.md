@@ -1,10 +1,7 @@
 <p align="center">
 <img alt="Fantail" src="http://www.ngamanuimages.org.nz/images/lres/d03689.jpg" />
 <p align="center">
-[![GitHub issues](https://img.shields.io/github/issues/francesco1119/Fantail.svg)](https://github.com/francesco1119/Fantail/issues)
-[![GitHub forks](https://img.shields.io/github/forks/francesco1119/Fantail.svg)](https://github.com/francesco1119/Fantail/network)
-[![GitHub stars](https://img.shields.io/github/stars/francesco1119/Fantail.svg)](https://github.com/francesco1119/Fantail/stargazers)
-[![GitHub license](https://img.shields.io/github/license/francesco1119/Fantail.svg)](https://github.com/francesco1119/Fantail/blob/master/LICENSE)
+<a href="https://github.com/francesco1119/Fantail/issues"><img alt="issues" src="https://img.shields.io/github/issues/francesco1119/Fantail.svg"></a>
 </p>
 </p>
 ## Fantail
