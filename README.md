@@ -91,7 +91,7 @@ Fantail doesn't search for geographic area like this:
 
 ![Fantail_Not](https://github.com/francesco1119/Fantail/blob/master/images/whatnot.png)
 
-If you want to do so [go here](https://iliauk.com/2015/12/18/data-mining-google-places-cafe-nero-example/)
+If you want to do so [go here](https://iliauk.wordpress.com/2015/12/18/data-mining-google-places-cafe-nero-example/)
 
 Future developent
 ------
