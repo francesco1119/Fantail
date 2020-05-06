@@ -67,7 +67,7 @@ Open an Issue if you have any question.
 How it works under the hood 
 ------
 
-The world is quite big to scrap using random geographical coordinates. You need to avoid oceans, deserts, jungles, lakes, mountain chains and plces where simply there is nothing. Google provides you 25,000 query search per day but you will run out of query if you search where there is nothing. So I based the search on IP2Location™, a database that stores the coordinates of IP adresses. 
+The world is quite big to scrap using random geographical coordinates. You need to avoid oceans, deserts, jungles, lakes, mountain chains and places where simply there is nothing. Google provides you 25,000 query search per day but you will run out of query if you search where there is nothing. So I based the search on IP2Location™, a database that stores the coordinates of IP adresses. 
 
 So in **Australia** you will search just on are where there are human beings, avoiding to search in the middle of the desert:
 ![Australia_Fantail](https://github.com/francesco1119/Fantail/blob/master/images/Australia.PNG)
