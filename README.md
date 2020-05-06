@@ -72,7 +72,7 @@ The world is quite big to scrap using random geographical coordinates. You need 
 So in **Australia** you will search just on areas where there are human beings, avoiding to search in the middle of the desert:
 ![Australia_Fantail](https://github.com/francesco1119/Fantail/blob/master/images/Australia.PNG)
 
-While in **Switzerland** you will avoid so waste your precious queries into the Lake of Geneva or in remote places in the Alps (as you can see ther e are a few dots in the Alps so, don't worry, small villages are counted in)
+While in **Switzerland** you will avoid so waste your precious queries into the Lake of Geneva or in remote places in the Alps (as you can see there are a few dots in the Alps so, don't worry, small villages are counted in)
 ![Switzerland_Fantail](https://github.com/francesco1119/Fantail/blob/master/images/Swiss.PNG)
 
 **France** is copletely covered as it has a lot of IP 
