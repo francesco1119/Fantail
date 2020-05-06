@@ -1,5 +1,5 @@
 <p align="center">
-<img alt="Fantail" src="http://www.ngamanuimages.org.nz/images/lres/d03689.jpg" />
+<img alt="Fantail" src="https://jeremyjameshongkong.files.wordpress.com/2019/03/download-20.jpeg" />
 <p align="center">
 <a href="https://github.com/francesco1119/Fantail/issues"><img alt="issues" src="https://img.shields.io/github/issues/francesco1119/Fantail.svg"></a>
 <a href="https://github.com/francesco1119/Fantail/network"><img alt="network" src="https://img.shields.io/github/forks/francesco1119/Fantail.svg"></a>
